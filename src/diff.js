@@ -1,9 +1,9 @@
-import * as monaco from 'monaco-editor/esm/vs/editor/editor.api';
-import React from 'react';
-import PropTypes from 'prop-types';
-import { processSize } from './utils'
+import * as monaco from "monaco-editor/esm/vs/editor/editor.api";
+import React from "react";
+import PropTypes from "prop-types";
+import { processSize } from "./utils";
 
-function noop() { }
+function noop() {}
 
 class MonacoDiffEditor extends React.Component {
   constructor(props) {
@@ -11,6 +11,7 @@ class MonacoDiffEditor extends React.Component {
     this.containerElement = undefined;
     this.__current_value = props.value;
     this.__current_original = props.original;
+    this.assignRef = this._assignRef.bind(this);
   }
 
   componentDidMount() {
@@ -42,7 +43,8 @@ class MonacoDiffEditor extends React.Component {
     }
     if (
       this.editor &&
-      (this.props.width !== prevProps.width || this.props.height !== prevProps.height)
+      (this.props.width !== prevProps.width ||
+        this.props.height !== prevProps.height)
     ) {
       this.editor.layout();
     }
@@ -84,12 +86,16 @@ class MonacoDiffEditor extends React.Component {
   }
 
   initMonaco() {
-    const value = this.props.value !== null ? this.props.value : this.props.defaultValue;
+    const value =
+      this.props.value !== null ? this.props.value : this.props.defaultValue;
     const { original, theme, options } = this.props;
     if (this.containerElement) {
       // Before initializing monaco editor
       this.editorWillMount();
-      this.editor = monaco.editor.createDiffEditor(this.containerElement, options);
+      this.editor = monaco.editor.createDiffEditor(
+        this.containerElement,
+        options
+      );
       if (theme) {
         monaco.editor.setTheme(theme);
       }
@@ -100,14 +106,14 @@ class MonacoDiffEditor extends React.Component {
   }
 
   destroyMonaco() {
-    if (typeof this.editor !== 'undefined') {
+    if (typeof this.editor !== "undefined") {
       this.editor.dispose();
     }
   }
 
-  assignRef = (component) => {
+  _assignRef(component) {
     this.containerElement = component;
-  };
+  }
 
   render() {
     const { width, height } = this.props;
@@ -118,7 +124,11 @@ class MonacoDiffEditor extends React.Component {
       height: fixedHeight
     };
 
-    return <div ref={this.assignRef} style={style} className="react-monaco-editor-container" />;
+    return React.createElement("div", {
+      ref: this.assignRef,
+      style: style,
+      className: "react-monaco-editor-container"
+    });
   }
 }
 
@@ -137,12 +147,12 @@ MonacoDiffEditor.propTypes = {
 };
 
 MonacoDiffEditor.defaultProps = {
-  width: '100%',
-  height: '100%',
+  width: "100%",
+  height: "100%",
   original: null,
   value: null,
-  defaultValue: '',
-  language: 'javascript',
+  defaultValue: "",
+  language: "javascript",
   theme: null,
   options: {},
   editorDidMount: noop,

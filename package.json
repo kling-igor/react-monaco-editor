@@ -52,7 +52,7 @@
     "typings-tester": "^0.3.2"
   },
   "peerDependencies": {
-    "react": "^15.x || ^16.x"
+    "react": "16.x"
   },
   "dependencies": {
     "@types/react": "*",

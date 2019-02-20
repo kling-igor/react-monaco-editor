@@ -1,15 +1,16 @@
-import * as monaco from 'monaco-editor/esm/vs/editor/editor.api';
-import PropTypes from 'prop-types';
-import React from 'react';
-import { processSize } from './utils'
+import * as monaco from "monaco-editor/esm/vs/editor/editor.api";
+import PropTypes from "prop-types";
+import React from "react";
+import { processSize } from "./utils";
 
-function noop() { }
+function noop() {}
 
 class MonacoEditor extends React.Component {
   constructor(props) {
     super(props);
     this.containerElement = undefined;
     this.__current_value = props.value;
+    this.assignRef = this._assignRef.bind(this);
   }
 
   componentDidMount() {
@@ -28,19 +29,23 @@ class MonacoEditor extends React.Component {
       }
     }
     if (prevProps.language !== this.props.language) {
-      monaco.editor.setModelLanguage(this.editor.getModel(), this.props.language);
+      monaco.editor.setModelLanguage(
+        this.editor.getModel(),
+        this.props.language
+      );
     }
     if (prevProps.theme !== this.props.theme) {
       monaco.editor.setTheme(this.props.theme);
     }
     if (
       this.editor &&
-      (this.props.width !== prevProps.width || this.props.height !== prevProps.height)
+      (this.props.width !== prevProps.width ||
+        this.props.height !== prevProps.height)
     ) {
       this.editor.layout();
     }
     if (prevProps.options !== this.props.options) {
-      this.editor.updateOptions(this.props.options)
+      this.editor.updateOptions(this.props.options);
     }
   }
 
@@ -56,7 +61,7 @@ class MonacoEditor extends React.Component {
 
   editorDidMount(editor) {
     this.props.editorDidMount(editor, monaco);
-    editor.onDidChangeModelContent((event) => {
+    editor.onDidChangeModelContent(event => {
       const value = editor.getValue();
 
       // Always refer to the latest value
@@ -70,7 +75,8 @@ class MonacoEditor extends React.Component {
   }
 
   initMonaco() {
-    const value = this.props.value !== null ? this.props.value : this.props.defaultValue;
+    const value =
+      this.props.value !== null ? this.props.value : this.props.defaultValue;
     const { language, theme, options } = this.props;
     if (this.containerElement) {
       // Before initializing monaco editor
@@ -89,14 +95,14 @@ class MonacoEditor extends React.Component {
   }
 
   destroyMonaco() {
-    if (typeof this.editor !== 'undefined') {
+    if (typeof this.editor !== "undefined") {
       this.editor.dispose();
     }
   }
 
-  assignRef = (component) => {
+  _assignRef(component) {
     this.containerElement = component;
-  };
+  }
 
   render() {
     const { width, height } = this.props;
@@ -107,7 +113,11 @@ class MonacoEditor extends React.Component {
       height: fixedHeight
     };
 
-    return <div ref={this.assignRef} style={style} className="react-monaco-editor-container" />;
+    return React.createElement("div", {
+      ref: this.assignRef,
+      style: style,
+      className: "react-monaco-editor-container"
+    });
   }
 }
 
@@ -125,11 +135,11 @@ MonacoEditor.propTypes = {
 };
 
 MonacoEditor.defaultProps = {
-  width: '100%',
-  height: '100%',
+  width: "100%",
+  height: "100%",
   value: null,
-  defaultValue: '',
-  language: 'javascript',
+  defaultValue: "",
+  language: "javascript",
   theme: null,
   options: {},
   editorDidMount: noop,
